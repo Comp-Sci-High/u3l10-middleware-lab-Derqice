@@ -1,3 +1,5 @@
+const express=require("express");
+const app= express()
 // INSTRUCTIONS: Write the code that does the following:
 // -0 Set up the server correctly
 // -1 console logs the method and URL for every request
@@ -22,3 +24,32 @@ const animalShelterData = {
         { name: "Cozy Paws Sanctuary", location: "456 Oak Avenue, Townsburg" }
     ]
 };
+
+app.use((request,response,next)=>{
+    console.log(request.method + "/" + request.url)
+    next()
+})
+
+app.get("/",(request,response)=>{
+    response.status(200).send("Welcome to the Animal Shelter Network")
+})
+
+app.get("/api/cat",(request,response)=>{
+response.status(200).json(animalShelterData.cats)
+})
+app.get("/api/shelters",(request,response)=>{
+    response.status(200).json(animalShelterData.shelters)
+})
+app.get("/docs",(request,response)=>{
+    response.status(200).send("Go to /api/cat to see cats for adoption and /api/shelters to see shelters in the area")
+})
+app.get("/adopt/cat",(request,response)=>{
+    response.status(200).send( "A cat you can adopt is " + animalShelterData.cats[0].name)
+})
+app.use((request,response,next)=>{
+    response.status(404).send("404 Not Found")
+})
+
+app.listen(3000,()=>{
+    console.log("server is running at http://localhost:3000")
+})
